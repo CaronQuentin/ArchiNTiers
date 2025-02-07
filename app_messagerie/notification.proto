@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package app_messagerie;
+
+service NotificationService {
+  rpc StreamNotifications(Empty) returns (stream Notification);
+}
+
+message Empty {}
+
+message Notification {
+  string message = 1;
+  string sender = 2;
+  int64 timestamp = 3;
+}

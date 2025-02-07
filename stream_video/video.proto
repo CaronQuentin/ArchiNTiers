@@ -1,0 +1,14 @@
+
+syntax = "proto3";
+
+service VideoStreamer {
+  rpc streamVideo(VideoRequest) returns (stream VideoChunk);
+}
+
+message VideoRequest {
+  string filename = 1;
+}
+
+message VideoChunk {
+  bytes chunkData = 1;
+}

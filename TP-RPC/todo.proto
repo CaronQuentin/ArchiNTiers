@@ -1,0 +1,42 @@
+syntax = "proto3";
+
+package todo;
+
+service TodoService {
+  rpc AddTask (Task) returns (Response);
+  rpc GetTasks (Empty) returns (Tasks);
+  rpc AddProduct (Product) returns (Response);
+  rpc UpdateProduct (Product) returns (Response);
+  rpc DeleteProduct (ProductId) returns (Response);
+  rpc GetProducts (Empty) returns (ProductsResponse);
+}
+
+message Task {
+  string id = 1;
+  string description = 2;
+}
+
+message Response {
+  string message = 1;
+}
+
+message Empty {}
+
+message Tasks {
+  repeated Task tasks = 1;
+}
+
+message Product {
+  string id = 1;
+  string name = 2;
+  string description = 3;
+  double price = 4;
+}
+
+message ProductId {
+  string id = 1;
+}
+
+message ProductsResponse {
+  repeated Product products = 1;
+}

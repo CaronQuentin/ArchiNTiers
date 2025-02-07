@@ -1,0 +1,14 @@
+{
+  "name": "myirc",
+  "version": "1.0.0",
+  "description": "A basic IRC server implemented in Node.js",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js"
+  },
+  "dependencies": {
+    "net": "^1.0.2"
+  },
+  "author": "",
+  "license": "ISC"
+}

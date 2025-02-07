@@ -1,0 +1,34 @@
+
+syntax = "proto3";
+
+service VideoStreamer {
+  rpc streamVideo(VideoRequest) returns (stream VideoChunk);
+}
+
+message VideoRequest {
+  string filename = 1;
+}
+
+message VideoChunk {
+  bytes chunkData = 1;
+}
+
+message Product {
+  string id = 1;
+  string name = 2;
+  double price = 3;
+}
+
+message ProductId {
+  string id = 1;
+}
+
+message Empty {}
+
+service ProductService {
+  rpc AddProduct(Product) returns (ProductId);
+  rpc GetProduct(ProductId) returns (Product);
+  rpc UpdateProduct(Product) returns (Product);
+  rpc DeleteProduct(ProductId) returns (ProductId);
+  rpc ListProducts(Empty) returns (stream Product);
+}
