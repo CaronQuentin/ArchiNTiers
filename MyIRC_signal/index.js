@@ -3,27 +3,25 @@ const net = require('net');
 const PORT = 6667;
 const clients = [];
 const nicknames = {};
-const channels = { global: [] }; // Default channel
+const channels = { global: [] }; 
 
 const server = net.createServer((socket) => {
     socket.write('Bienvenue sur le Chat ! Veuillez entrer votre pseudo : ');
 
     let username = null;
     let currentChannel = 'global';
-    let buffer = ""; // Utilisé pour stocker les données incomplètes
+    let buffer = ""; 
 
     socket.on('data', (data) => {
         buffer += data.toString();
 
-        // Traiter les lignes complètes
         let lines = buffer.split('\n');
-        buffer = lines.pop(); // Garder la dernière partie incomplète
+        buffer = lines.pop(); 
 
         for (let line of lines) {
             const message = line.trim();
 
             if (!username) {
-                // Validate the nickname
                 if (isValidNickname(message)) {
                     username = message;
                     nicknames[socket] = username;
@@ -37,12 +35,10 @@ const server = net.createServer((socket) => {
                     socket.write('Pseudo invalide ou déjà pris. Veuillez entrer un autre pseudo : ');
                 }
             } else {
-                // Handle /list command
                 if (message === '/list') {
                     const userList = clients.map(client => client.username).join(', ');
                     socket.write(`Utilisateurs connectes : ${userList}\r\n`);
                 } else if (message.startsWith('/whisper ')) {
-                    // Handle /whisper command
                     const parts = message.split(' ');
                     const targetUsername = parts[1];
                     const whisperMessage = parts.slice(2).join(' ');
@@ -71,9 +67,7 @@ const server = net.createServer((socket) => {
                         }
                     } else if (command === 'join') {
                         if (channelName && channels[channelName]) {
-                            // Remove from current channel
                             channels[currentChannel] = channels[currentChannel].filter(s => s !== socket);
-                            // Add to new channel
                             currentChannel = channelName;
                             channels[currentChannel].push(socket);
                             clients.find(client => client.socket === socket).channel = currentChannel;
@@ -85,7 +79,6 @@ const server = net.createServer((socket) => {
                         socket.write('Commande de canal invalide.\r\n');
                     }
                 } else {
-                    // Broadcast the message to all other clients in the same channel
                     broadcast(`[${username}] ${message}\r\n`, socket, currentChannel);
                 }
             }
@@ -120,7 +113,7 @@ function isValidNickname(nickname) {
 }
 
 function broadcast(message, senderSocket, channel) {
-    const greenChannel = `\x1b[32m${channel}\x1b[0m`; // Green color for channel name
+    const greenChannel = `\x1b[32m${channel}\x1b[0m`; 
     clients.forEach((client) => {
         if (client.socket !== senderSocket && client.channel === channel) {
             client.socket.write(`[${greenChannel}] ${message}\r\n`);
@@ -129,8 +122,8 @@ function broadcast(message, senderSocket, channel) {
 }
 
 function broadcastserver(message, senderSocket, channel) {
-    const greenChannel = `\x1b[32m${channel}\x1b[0m`; // Green color for channel name
-    const redMessage = `\x1b[31m${message}\x1b[0m`; // Red color for message
+    const greenChannel = `\x1b[32m${channel}\x1b[0m`; 
+    const redMessage = `\x1b[31m${message}\x1b[0m`; 
 
     clients.forEach((client) => {
         if (client.socket !== senderSocket && client.channel === channel) {
